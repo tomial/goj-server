@@ -1,0 +1,28 @@
+# HTTP Server
+[server]
+	Address     = ":8080"
+	ServerRoot  = "public"
+	ServerAgent = "gf-app"
+	LogPath     = "log/server"
+
+# Logger.
+[logger]
+    Path        = "log"
+    Level       = "all"
+    Stdout      = true
+
+# Template.
+[viewer]
+    Path        = "template"
+    DefaultFile = "index.html"
+    Delimiters  =  ["${", "}"]
+
+# Database.
+[database]
+    link  = "mysql:goj:goj@tcp(127.0.0.1:3306)/goj"
+    debug = true
+    # Database logger.
+    [database.logger]
+        Path   = "log/sql"
+        Level  = "all"
+        Stdout = true
