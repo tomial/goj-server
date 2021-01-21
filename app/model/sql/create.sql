@@ -1,12 +1,27 @@
 CREATE TABLE `user` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `username` varchar(40) NOT NULL COMMENT '用户名',
-  `email` varchar(254) COMMENT '邮箱',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-);
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `username` VARCHAR(40) NOT NULL COMMENT '用户名',
+  `email` VARCHAR(254) COMMENT '邮箱',
+  `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8mb4; 
 
 CREATE TABLE `user_auth` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) 
-)
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT(10) UNSIGNED NOT NULL COMMENT '用户ID',
+  `type` VARCHAR(10) COMMENT '验证类型',
+  `identifier` VARCHAR(255) COMMENT '唯一标识',
+  `credential` VARCHAR(255) COMMENT '密码凭证',
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES user(id)
+) DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `user_profile` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT(10) UNSIGNED NOT NULL COMMENT '用户ID',
+  `avatar` VARCHAR(2083) COMMENT '头像链接',
+  `description` TEXT COMMENT '个人简介',
+  `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES user(id)
+) DEFAULT CHARSET=utf8mb4;
