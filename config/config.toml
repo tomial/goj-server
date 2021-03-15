@@ -19,8 +19,9 @@
 
 # Database.
 [database]
-    link  = "mysql:goj:goj@tcp(127.0.0.1:3306)/goj"
-    debug = true
+    type = "mysql"
+    [database.localhost]
+        link = "goj:goj@/goj?charset=utf8mb4&collation=utf8mb4_unicode_ci"
     # Database logger.
     [database.logger]
         Path   = "log/sql"

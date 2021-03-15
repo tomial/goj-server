@@ -1,7 +1,12 @@
-package model
+package internal
 
+import "time"
+
+// User 用户表
 type User struct {
-	Username string
-	Password string
-	Email    string
+	ID         uint32
+	Username   string
+	Email      string
+	CreateTime time.Time
+	// Status     uint8 TODO 邮箱验证
 }

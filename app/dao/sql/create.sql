@@ -3,7 +3,9 @@ CREATE TABLE `user` (
   `username` VARCHAR(40) NOT NULL COMMENT '用户名',
   `email` VARCHAR(254) COMMENT '邮箱',
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  CONSTRAINT `username` UNIQUE (username),
+  CONSTRAINT `email` UNIQUE (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; 
 
 CREATE TABLE `user_auth` (
@@ -13,7 +15,8 @@ CREATE TABLE `user_auth` (
   `identifier` VARCHAR(255) NOT NULL COMMENT '唯一标识',
   `credential` VARCHAR(255) NOT NULL COMMENT '密码凭证',
   PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES user(id)
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  CONSTRAINT `identifier` UNIQUE (identifier)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `user_profile` (
