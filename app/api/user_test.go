@@ -58,7 +58,7 @@ func TestSignUp(t *testing.T) {
 		if err != nil {
 			t.Log(err)
 			t.FailNow()
-		} else if signUpResp.StatusCode == global.StatusError && !c.wantError {
+		} else if signUpResp.StatusCode > 1 && signUpResp.StatusCode < 100 && !c.wantError {
 			t.Log(c.name, "FAILED")
 			t.Log(signUpResp.Msg)
 			t.FailNow()

@@ -16,7 +16,6 @@ var User = new(user)
 
 // SignUp 注册接口
 func (*user) SignUp(r *ghttp.Request) {
-	// TODO 用用户名、帐号、密码、邮箱注册
 	reqBytes := r.GetBody()
 	reqData := &model.SignUpReq{}
 
@@ -24,17 +23,17 @@ func (*user) SignUp(r *ghttp.Request) {
 	if err != nil {
 		// 返回错误
 		resp, _ := json.Marshal(model.SignUpResp{
-			StatusCode: global.StatusError,
+			StatusCode: global.RequestError,
 			Msg:        err.Error(),
 		})
 		r.Response.WriteJsonExit(resp)
 	}
 
-	err = service.User.SignUp(reqData, r)
+	err, code := service.User.SignUp(reqData, r)
 	if err != nil {
 		// 返回错误
 		resp, _ := json.Marshal(model.SignUpResp{
-			StatusCode: global.StatusError,
+			StatusCode: code,
 			Msg:        err.Error(),
 		})
 		r.Response.WriteJsonExit(resp)
@@ -55,11 +54,11 @@ func (*user) LogIn(r *ghttp.Request) {
 	reqData := &model.LogInReq{}
 
 	json.Unmarshal(reqBytes, reqData)
-	err := service.User.LogIn(reqData, r)
+	err, code := service.User.LogIn(reqData, r)
 
 	if err != nil {
 		resp, _ := json.Marshal(model.LogInResp{
-			StatusCode: global.StatusError,
+			StatusCode: code,
 			Msg:        err.Error(),
 		})
 		r.Response.WriteJsonExit(resp)

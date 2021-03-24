@@ -1,5 +1,7 @@
 package model
 
+import "goj/global"
+
 // SignUpReq 注册请求结构体
 type SignUpReq struct {
 	Username string `v:"required|min-length:1"`
@@ -10,7 +12,7 @@ type SignUpReq struct {
 
 // SignUpResp 注册响应结构体
 type SignUpResp struct {
-	StatusCode uint
+	StatusCode global.StatusCode
 	Msg        string
 }
 
@@ -22,7 +24,7 @@ type LogInReq struct {
 
 // LogInResp 登录响应结构体
 type LogInResp struct {
-	StatusCode uint
+	StatusCode global.StatusCode
 	Msg        string
 	Username   string
 }
