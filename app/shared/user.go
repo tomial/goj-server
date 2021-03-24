@@ -1,9 +1,8 @@
-package internal
+package shared
 
 import "time"
 
-// User 用户表
-type User struct {
+type ContextUser struct {
 	ID         uint32
 	Username   string
 	Email      string

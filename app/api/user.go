@@ -18,9 +18,9 @@ var User = new(user)
 func (*user) SignUp(r *ghttp.Request) {
 	// TODO 用用户名、帐号、密码、邮箱注册
 	reqBytes := r.GetBody()
-	reqData := model.SignUpReq{}
+	reqData := &model.SignUpReq{}
 
-	err := json.Unmarshal(reqBytes, &reqData)
+	err := json.Unmarshal(reqBytes, reqData)
 	if err != nil {
 		// 返回错误
 		resp, _ := json.Marshal(model.SignUpResp{
@@ -30,7 +30,7 @@ func (*user) SignUp(r *ghttp.Request) {
 		r.Response.WriteJsonExit(resp)
 	}
 
-	err = service.User.SignUp(&reqData)
+	err = service.User.SignUp(reqData, r)
 	if err != nil {
 		// 返回错误
 		resp, _ := json.Marshal(model.SignUpResp{
@@ -42,8 +42,8 @@ func (*user) SignUp(r *ghttp.Request) {
 
 	// 返回提示成功数据
 	resp, _ := json.Marshal(model.SignUpResp{
-		StatusCode: global.StatusSuccess,
-		Msg:        global.Msg[global.StatusSuccess],
+		StatusCode: global.RegisterSuccess,
+		Msg:        global.Msg[global.RegisterSuccess],
 	})
 	r.Response.WriteJson(resp)
 }
@@ -51,7 +51,27 @@ func (*user) SignUp(r *ghttp.Request) {
 // LogIn 登录接口
 func (*user) LogIn(r *ghttp.Request) {
 	// TODO 用帐号、密码登录
-	// service.LogIn(identifier, credential)
+	reqBytes := r.GetBody()
+	reqData := &model.LogInReq{}
+
+	json.Unmarshal(reqBytes, reqData)
+	err := service.User.LogIn(reqData, r)
+
+	if err != nil {
+		resp, _ := json.Marshal(model.LogInResp{
+			StatusCode: global.StatusError,
+			Msg:        err.Error(),
+		})
+		r.Response.WriteJsonExit(resp)
+	}
+
+	resp, _ := json.Marshal(model.LogInResp{
+		StatusCode: global.RegisterSuccess,
+		Msg:        global.Msg[global.LoginSuccess],
+		Username:   r.Session.GetString("username"),
+	})
+
+	r.Response.WriteJson(resp)
 }
 
 // GetProfile 获得用户信息接口
