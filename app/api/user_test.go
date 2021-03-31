@@ -2,8 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"goj/app/model"
-	"goj/global"
+	"goj-server/app/model"
+	"goj-server/global"
 	"testing"
 
 	"github.com/gogf/gf/frame/g"
@@ -58,11 +58,11 @@ func TestSignUp(t *testing.T) {
 		if err != nil {
 			t.Log(err)
 			t.FailNow()
-		} else if signUpResp.StatusCode == global.StatusError && !c.wantError {
+		} else if signUpResp.StatusCode > 1 && signUpResp.StatusCode < 100 && !c.wantError {
 			t.Log(c.name, "FAILED")
 			t.Log(signUpResp.Msg)
 			t.FailNow()
-		} else if signUpResp.StatusCode == global.StatusSuccess && c.wantError {
+		} else if signUpResp.StatusCode == global.RegisterSuccess && c.wantError {
 			t.Log(c.name, "FAILED")
 			t.Log(signUpResp.Msg)
 			t.FailNow()

@@ -28,3 +28,11 @@ CREATE TABLE `user_profile` (
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES user(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `problems` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(20) COMMENT '题目名称',
+  `difficulty` TINYINT(1) UNSIGNED COMMENT '难度',
+  `rate`
+
+)
