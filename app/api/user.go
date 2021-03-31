@@ -2,9 +2,9 @@ package api
 
 import (
 	"encoding/json"
-	"goj/app/model"
-	"goj/app/service"
-	"goj/global"
+	"goj-server/app/model"
+	"goj-server/app/service"
+	"goj-server/global"
 
 	"github.com/gogf/gf/net/ghttp"
 )

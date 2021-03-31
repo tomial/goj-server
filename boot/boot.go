@@ -1,8 +1,8 @@
 package boot
 
 import (
-	_ "goj/app/dao"
-	_ "goj/packed"
+	_ "goj-server/app/dao"
+	_ "goj-server/packed"
 )
 
 func init() {

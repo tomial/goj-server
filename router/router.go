@@ -1,7 +1,7 @@
 package router
 
 import (
-	"goj/app/api"
+	"goj-server/app/api"
 	"time"
 
 	"github.com/gogf/gf/frame/g"
@@ -23,5 +23,9 @@ func init() {
 		group.POST("/signup", api.User.SignUp)
 		group.GET("/profile", api.User.GetProfile)
 		group.POST("/profile/update", api.User.UpdateProfile)
+	})
+
+	s.Group("/problems", func(group *ghttp.RouterGroup) {
+		group.GET("/", api.Problems.GetAll)
 	})
 }

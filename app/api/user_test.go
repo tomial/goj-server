@@ -2,8 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"goj/app/model"
-	"goj/global"
+	"goj-server/app/model"
+	"goj-server/global"
 	"testing"
 
 	"github.com/gogf/gf/frame/g"

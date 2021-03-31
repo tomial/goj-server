@@ -1,6 +1,6 @@
 package model
 
-import "goj/global"
+import "goj-server/global"
 
 // SignUpReq 注册请求结构体
 type SignUpReq struct {

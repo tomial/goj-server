@@ -3,9 +3,9 @@ package service
 import (
 	"database/sql"
 	"errors"
-	"goj/app/dao"
-	"goj/app/model"
-	"goj/global"
+	"goj-server/app/dao"
+	"goj-server/app/model"
+	"goj-server/global"
 	"net/http"
 	"strconv"
 	"strings"
@@ -163,5 +163,6 @@ func (*userService) LogIn(r *model.LogInReq, request *ghttp.Request) (error, glo
 	}
 
 	request.Session.Set("username", username)
+	request.Session.Set("uid", uid)
 	return nil, global.Success
 }
