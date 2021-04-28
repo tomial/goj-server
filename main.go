@@ -1,8 +1,8 @@
 package main
 
 import (
-	_ "goj/boot"
-	_ "goj/router"
+	_ "goj-server/boot"
+	_ "goj-server/router"
 
 	"github.com/gogf/gf/frame/g"
 )

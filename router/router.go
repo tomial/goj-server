@@ -9,8 +9,17 @@ import (
 	"github.com/gogf/gf/os/gsession"
 )
 
+func middleWare(r *ghttp.Request) {
+	corsOptions := r.Response.DefaultCORSOptions()
+	corsOptions.AllowDomain = []string{"localhost:3000"}
+	r.Response.CORS(corsOptions)
+	r.Middleware.Next()
+}
+
 func init() {
 	s := g.Server()
+
+	s.BindMiddlewareDefault(middleWare)
 
 	// Session 设置
 	s.SetConfigWithMap(g.Map{

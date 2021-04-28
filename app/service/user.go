@@ -33,8 +33,8 @@ func (*userService) SignUp(r *model.SignUpReq, request *ghttp.Request) (error, g
 
 		// 请求出错，返回400状态码
 		request.Response.Status = http.StatusBadRequest
-		logger.Warning(err.FirstString())
-		return errors.New(err.FirstString()), global.RequestError
+		logger.Warning(err.Error())
+		return errors.New(err.Error()), global.RequestError
 	}
 
 	var username string
@@ -138,7 +138,7 @@ func (*userService) LogIn(r *model.LogInReq, request *ghttp.Request) (error, glo
 
 	if err := validator.CheckStruct(r, nil); err != nil {
 		request.Response.Status = http.StatusBadRequest
-		return errors.New(err.FirstString()), global.RequestError
+		return errors.New(err.Error()), global.RequestError
 	}
 
 	result := dao.DB.QueryRowx(

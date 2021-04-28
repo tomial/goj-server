@@ -15,10 +15,10 @@ const (
 
 // Msg 全局响应消息
 var Msg = map[StatusCode]string{
-	Success:         "Success",
-	GenericError:    "Error",
-	ServerError:     "Server Error",
-	RequestError:    "Request Error,",
-	RegisterSuccess: "Successfully registered.",
-	LoginSuccess:    "Successfully logged in",
+	Success:         "请求成功",
+	GenericError:    "发生未知错误",
+	ServerError:     "服务器错误",
+	RequestError:    "请求错误",
+	RegisterSuccess: "注册成功",
+	LoginSuccess:    "登陆成功",
 }
