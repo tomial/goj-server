@@ -2,10 +2,11 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"goj-server/app/model"
 	"goj-server/app/service"
+	"goj-server/global"
 
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 )
 
@@ -13,40 +14,58 @@ type problems struct{}
 
 var Problems = new(problems)
 
-func (*problems) GetList(r *ghttp.Request) {
-	// 获取题目范围
-	var start, end int
-	start = r.GetQueryInt("start")
-	end = r.GetQueryInt("end")
-
-	if start == 0 || end == 0 {
-		start = 1
-		end = 10
-	}
-
-	result, err := service.Problems.Get(start, end)
-	if err != nil {
-		g.Log().Warning(err.Error())
-	}
-
-	r.Response.Write(result)
-}
-
 func (*problems) Get(r *ghttp.Request) {
 
+}
+
+func (*problems) GetList(r *ghttp.Request) {
+	// 获取题目范围
+	var page, num int
+	page = r.GetQueryInt("page")
+	num = r.GetQueryInt("num")
+
+	result, err := service.Problems.GetList(page, num, r)
+
+	if err != nil {
+		resp, _ := json.Marshal(model.GenericResp{
+			StatusCode: global.RequestError,
+			Msg:        err.Error(),
+		})
+		r.Response.WriteJsonExit(resp)
+	}
+
+	fmt.Println(result)
+	resp, _ := json.Marshal(result)
+
+	r.Response.WriteJson(resp)
 }
 
 func (*problems) AddProblem(r *ghttp.Request) {
 	req := &model.AddProblemReq{}
 	err := json.Unmarshal(r.GetBody(), req)
+
 	if err != nil {
-		g.Log().Warning(err.Error())
+		resp, _ := json.Marshal(model.GenericResp{
+			StatusCode: global.RequestError,
+			Msg:        global.Msg[global.RequestError],
+		})
+		r.Response.WriteJsonExit(resp)
 	}
 
-	service.Problems.AddProblem(req)
+	err = service.Problems.AddProblem(req, r)
+	if err != nil {
+		resp, _ := json.Marshal(model.GenericResp{
+			StatusCode: global.RequestError,
+			Msg:        err.Error(),
+		})
+		r.Response.WriteJsonExit(resp)
+	}
 
-	g.Log().Info(req)
-	r.Response.Writeln("OK")
+	resp, _ := json.Marshal(model.GenericResp{
+		StatusCode: global.AddProblemSucc,
+		Msg:        global.Msg[global.AddProblemSucc],
+	})
+	r.Response.WriteJson(resp)
 }
 
 func (*problems) Judge(r *ghttp.Request) {

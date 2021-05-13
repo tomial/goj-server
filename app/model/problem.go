@@ -1,5 +1,11 @@
 package model
 
+type ProblemListItem struct {
+	ID         int
+	Name       string
+	Difficulty string
+}
+
 type AddProblemReq struct {
 	Name        string
 	Description string

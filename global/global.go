@@ -1,6 +1,6 @@
 package global
 
-type StatusCode int
+type StatusCode uint64
 
 // 全局响应状态码
 const (
@@ -11,6 +11,7 @@ const (
 
 	RegisterSuccess = 100
 	LoginSuccess    = 200
+	AddProblemSucc  = 210
 )
 
 // Msg 全局响应消息
@@ -21,4 +22,5 @@ var Msg = map[StatusCode]string{
 	RequestError:    "请求错误",
 	RegisterSuccess: "注册成功",
 	LoginSuccess:    "登陆成功",
+	AddProblemSucc:  "添加问题成功",
 }

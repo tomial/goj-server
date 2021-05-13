@@ -50,6 +50,7 @@ CREATE TABLE `problems` (
   `description` TEXT NOT NULL COMMENT '题目描述',
   `tlimit` INT UNSIGNED NOT NULL COMMENT '时间限制-ms',
   `rlimit` INT UNSIGNED NOT NULL COMMENT '内存限制-ms',
+  CONSTRAINT `name` UNIQUE(name),
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
