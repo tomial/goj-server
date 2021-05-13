@@ -35,12 +35,21 @@ CREATE TABLE `user_profile` (
   FOREIGN KEY (user_id) REFERENCES user(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `user_role` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT UNSIGNED NOT NULL COMMENT '用户ID',
+  `role` ENUM('用户', '管理员') NOT NULL COMMENT '用户角色' DEFAULT '用户',
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES user(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `problems` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '题目ID',
   `name` VARCHAR(20) NOT NULL COMMENT '题目名称',
-  `difficulty` TINYINT(1) UNSIGNED NOT NULL COMMENT '难度',
+  `difficulty` ENUM('简单', '中等', '困难') NOT NULL COMMENT '难度',
   `description` TEXT NOT NULL COMMENT '题目描述',
-  `limit` VARCHAR(10) NOT NULL COMMENT '时空限制',
+  `tlimit` INT UNSIGNED NOT NULL COMMENT '时间限制-ms',
+  `rlimit` INT UNSIGNED NOT NULL COMMENT '内存限制-ms',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -49,10 +58,21 @@ CREATE TABLE `submissions` (
   `user_id` INT UNSIGNED NOT NULL COMMENT '用户ID',
   `problem_id` INT UNSIGNED NOT NULL COMMENT '题目ID',
   `language` TINYINT(3) UNSIGNED NOT NULL COMMENT '编程语言',
-  `passed` BOOLEAN NOT NULL COMMENT '通过题目',
+  `result` TINYINT(1) UNSIGNED NOT NULL COMMENT '运行结果',
   `code` TEXT NOT NULL COMMENT '代码',
+  `tusage` INT UNSIGNED NOT NULL COMMENT '时间消耗-ms',
+  `rusage` INT UNSIGNED NOT NULL COMMENT '内存消耗-ms',
   `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '提交时间',
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES user (id),
+  FOREIGN KEY (problem_id) REFERENCES problems (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `testcase` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '测试用例ID',
+  `problem_id` INT UNSIGNED NOT NULL COMMENT '题目ID',
+  `input` TEXT NOT NULL COMMENT '输入',
+  `output` TEXT NOT NULL COMMENT '输出',
+  PRIMARY KEY (id),
   FOREIGN KEY (problem_id) REFERENCES problems (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

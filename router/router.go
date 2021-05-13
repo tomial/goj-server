@@ -12,6 +12,7 @@ import (
 func middleWare(r *ghttp.Request) {
 	corsOptions := r.Response.DefaultCORSOptions()
 	corsOptions.AllowDomain = []string{"localhost:3000"}
+	corsOptions.AllowCredentials = "true"
 	r.Response.CORS(corsOptions)
 	r.Middleware.Next()
 }
@@ -35,6 +36,9 @@ func init() {
 	})
 
 	s.Group("/problems", func(group *ghttp.RouterGroup) {
-		group.GET("/", api.Problems.GetAll)
+		group.GET("/", api.Problems.GetList)
+		group.GET("/:id", api.Problems.Get)
+		group.POST("/add", api.Problems.AddProblem)
+		group.POST("/judge", api.Problems.Judge)
 	})
 }

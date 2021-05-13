@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"goj-server/app/model"
 	"goj-server/app/service"
 	"goj-server/global"
@@ -24,7 +25,8 @@ func (*user) SignUp(r *ghttp.Request) {
 		// 返回错误
 		resp, _ := json.Marshal(model.SignUpResp{
 			StatusCode: global.RequestError,
-			Msg:        err.Error(),
+			Msg:        global.Msg[global.RequestError],
+			Uid:        -1,
 		})
 		r.Response.WriteJsonExit(resp)
 	}
@@ -35,6 +37,7 @@ func (*user) SignUp(r *ghttp.Request) {
 		resp, _ := json.Marshal(model.SignUpResp{
 			StatusCode: code,
 			Msg:        err.Error(),
+			Uid:        -1,
 		})
 		r.Response.WriteJsonExit(resp)
 	}
@@ -43,29 +46,41 @@ func (*user) SignUp(r *ghttp.Request) {
 	resp, _ := json.Marshal(model.SignUpResp{
 		StatusCode: global.RegisterSuccess,
 		Msg:        global.Msg[global.RegisterSuccess],
+		Uid:        r.Session.GetInt("uid"),
 	})
 	r.Response.WriteJson(resp)
 }
 
 // LogIn 登录接口
 func (*user) LogIn(r *ghttp.Request) {
-	// TODO 用帐号、密码登录
 	reqBytes := r.GetBody()
 	reqData := &model.LogInReq{}
 
-	json.Unmarshal(reqBytes, reqData)
+	err := json.Unmarshal(reqBytes, reqData)
+	if err != nil {
+		resp, _ := json.Marshal(model.LogInResp{
+			StatusCode: global.RequestError,
+			Msg:        global.Msg[global.RequestError],
+			Username:   "",
+		})
+		r.Response.WriteJsonExit(resp)
+	}
+
+	fmt.Println(reqData)
+
 	err, code := service.User.LogIn(reqData, r)
 
 	if err != nil {
 		resp, _ := json.Marshal(model.LogInResp{
 			StatusCode: code,
 			Msg:        err.Error(),
+			Username:   "",
 		})
 		r.Response.WriteJsonExit(resp)
 	}
 
 	resp, _ := json.Marshal(model.LogInResp{
-		StatusCode: global.RegisterSuccess,
+		StatusCode: global.LoginSuccess,
 		Msg:        global.Msg[global.LoginSuccess],
 		Username:   r.Session.GetString("username"),
 	})

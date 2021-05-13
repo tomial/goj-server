@@ -33,11 +33,12 @@ func (*userService) SignUp(r *model.SignUpReq, request *ghttp.Request) (error, g
 
 		// 请求出错，返回400状态码
 		request.Response.Status = http.StatusBadRequest
-		logger.Warning(err.Error())
-		return errors.New(err.Error()), global.RequestError
+		logger.Warning(err.FirstString())
+		return errors.New(err.FirstString()), global.RequestError
 	}
 
 	var username string
+	var uid int
 	// 若用户不存在则注册，否则返回错误
 	if err := dao.DB.QueryRowx(
 		"select username from user where username = ?", r.Username).Scan(&username); err != nil &&
@@ -75,8 +76,6 @@ func (*userService) SignUp(r *model.SignUpReq, request *ghttp.Request) (error, g
 		// 获得新建用户的UID用于关联表的插入
 		row := tx.QueryRow("select id from user where username = ?", r.Username)
 
-		var uid int
-
 		if err := row.Scan(&uid); err != nil {
 			tx.Rollback()
 			logger.Warning("找不到用户: " + r.Username)
@@ -93,6 +92,13 @@ func (*userService) SignUp(r *model.SignUpReq, request *ghttp.Request) (error, g
 			r.Password,
 		)
 
+		if err != nil {
+			tx.Rollback()
+			request.Response.Status = http.StatusInternalServerError
+			return errors.New("创建帐号时发生错误"), global.ServerError
+		}
+
+		_, err = tx.Exec("insert into user_role(id, user_id, role) values(null, ?, '用户')", uid)
 		if err != nil {
 			tx.Rollback()
 			request.Response.Status = http.StatusInternalServerError
@@ -125,9 +131,9 @@ func (*userService) SignUp(r *model.SignUpReq, request *ghttp.Request) (error, g
 		return errors.New("用户已存在"), global.RequestError
 	}
 
+	request.Session.Set("uid", uid)
 	logger.Info("新用户注册：" + r.Username)
-
-	return nil, global.Success
+	return nil, global.RegisterSuccess
 }
 
 // LogIn 处理用户登陆
@@ -157,12 +163,12 @@ func (*userService) LogIn(r *model.LogInReq, request *ghttp.Request) (error, glo
 
 	result = dao.DB.QueryRowx("select username from user where id = ?", uid)
 	if err := result.Scan(&username); err != nil {
-		request.Response.Status = http.StatusInternalServerError
-		g.Log().Error("从数据库获取用户信息时出错")
-		return errors.New("获取用户信息时出错"), global.ServerError
+		request.Response.Status = http.StatusBadRequest
+		g.Log().Error("未找到用户")
+		return errors.New("未找到用户"), global.RequestError
 	}
 
 	request.Session.Set("username", username)
 	request.Session.Set("uid", uid)
-	return nil, global.Success
+	return nil, global.LoginSuccess
 }

@@ -6,14 +6,15 @@ import "goj-server/global"
 type SignUpReq struct {
 	Username string `v:"required|min-length:1"`
 	Account  string `v:"required|passport"`
-	Password string `v:"required|password"`
 	Email    string `v:"required|email"`
+	Password string `v:"required|password"`
 }
 
 // SignUpResp 注册响应结构体
 type SignUpResp struct {
 	StatusCode global.StatusCode
 	Msg        string
+	Uid        int
 }
 
 // LogInReq 登录请求结构体
