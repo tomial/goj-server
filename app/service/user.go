@@ -49,7 +49,7 @@ func (*userService) SignUp(r *model.SignUpReq, request *ghttp.Request) (error, g
 		tx, err := dao.DB.Begin()
 		if err != nil {
 			logger.Error("创建帐号开始事务失败")
-
+			logger.Error(err.Error())
 			// 服务器内部出错，返回500状态码
 			request.Response.Status = http.StatusInternalServerError
 			return errors.New("创建帐号时发生错误"), global.ServerError
@@ -67,7 +67,7 @@ func (*userService) SignUp(r *model.SignUpReq, request *ghttp.Request) (error, g
 			// 回滚事务
 			tx.Rollback()
 			logger.Warning("用户名或邮箱重复")
-
+			logger.Warning(err.Error())
 			// 请求错误，返回400状态码
 			request.Response.Status = http.StatusBadRequest
 			return errors.New("用户名或邮箱已被占用"), global.RequestError
@@ -95,6 +95,7 @@ func (*userService) SignUp(r *model.SignUpReq, request *ghttp.Request) (error, g
 		if err != nil {
 			tx.Rollback()
 			request.Response.Status = http.StatusInternalServerError
+			logger.Warning(err.Error())
 			return errors.New("创建帐号时发生错误"), global.ServerError
 		}
 
@@ -102,6 +103,7 @@ func (*userService) SignUp(r *model.SignUpReq, request *ghttp.Request) (error, g
 		if err != nil {
 			tx.Rollback()
 			request.Response.Status = http.StatusInternalServerError
+			logger.Warning(err.Error())
 			return errors.New("创建帐号时发生错误"), global.ServerError
 		}
 

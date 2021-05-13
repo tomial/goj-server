@@ -16,6 +16,21 @@ var Problems = new(problemsService)
 
 type problemsService struct{}
 
+func (*problemsService) GetContent(pid uint64, r *ghttp.Request) (*model.ProblemContent, error) {
+	result := dao.DB.QueryRowx(`select * from problems where id = ?`, pid)
+	content := &model.ProblemContent{}
+
+	err := result.StructScan(content)
+	if err != nil {
+		g.Log().Warning("找不到题目内容：", pid)
+		g.Log().Warning(err.Error())
+		r.Response.Status = http.StatusBadRequest
+		return nil, errors.New("找不到内容")
+	}
+
+	return content, nil
+}
+
 func (*problemsService) GetList(page, num int, r *ghttp.Request) ([]model.ProblemListItem, error) {
 	list := make([]model.ProblemListItem, 0)
 	fmt.Println(num, num*page)
@@ -25,7 +40,7 @@ func (*problemsService) GetList(page, num int, r *ghttp.Request) ([]model.Proble
 	if err != nil {
 		r.Response.Status = http.StatusBadRequest
 		g.Log().Warning("获取题目列表失败")
-		g.Log().Warning(err)
+		g.Log().Warning(err.Error())
 		return list, errors.New("获取题目列表失败")
 	}
 
@@ -111,3 +126,5 @@ func (*problemsService) AddProblem(req *model.AddProblemReq, r *ghttp.Request) e
 
 	return nil
 }
+
+func (*problemsService) Judge()

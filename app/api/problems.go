@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"goj-server/app/model"
 	"goj-server/app/service"
 	"goj-server/global"
@@ -15,7 +14,18 @@ type problems struct{}
 var Problems = new(problems)
 
 func (*problems) Get(r *ghttp.Request) {
+	pid := r.GetUint64("id")
+	data, err := service.Problems.GetContent(pid, r)
+	if err != nil {
+		resp, _ := json.Marshal(model.GenericResp{
+			StatusCode: global.RequestError,
+			Msg:        global.Msg[global.RequestError],
+		})
+		r.Response.WriteJsonExit(resp)
+	}
 
+	resp, _ := json.Marshal(data)
+	r.Response.WriteJson(resp)
 }
 
 func (*problems) GetList(r *ghttp.Request) {
@@ -34,7 +44,6 @@ func (*problems) GetList(r *ghttp.Request) {
 		r.Response.WriteJsonExit(resp)
 	}
 
-	fmt.Println(result)
 	resp, _ := json.Marshal(result)
 
 	r.Response.WriteJson(resp)
