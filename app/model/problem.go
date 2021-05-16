@@ -10,14 +10,24 @@ type AddProblemReq struct {
 	Name        string
 	Description string
 	Difficulty  string
-	Testcases   []testcase
+	Testcases   []Testcase
 	Tlimit      uint64
 	Rlimit      uint64
 }
 
-type testcase struct {
+type ProblemLimit struct {
+	Tlimit int
+	Rlimit int
+}
+
+type Testcase struct {
 	Input  string
 	Output string
+}
+
+type TestcaseDat struct {
+	Input  []byte
+	Output []byte
 }
 
 type ProblemContent struct {
@@ -27,4 +37,25 @@ type ProblemContent struct {
 	Difficulty  string
 	Tlimit      uint64
 	Rlimit      uint64
+}
+
+type JudgeReq struct {
+	PID      uint64
+	Code     string
+	Language string
+}
+
+type JudgeResult struct {
+	Code   int
+	Msg    string
+	Tusage int
+	Rusage int
+}
+
+type Submission struct {
+	Language  int
+	Result    int
+	Tusage    int
+	Rusage    int
+	CreatedAt string `db:"createdAt"`
 }

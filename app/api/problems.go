@@ -5,6 +5,7 @@ import (
 	"goj-server/app/model"
 	"goj-server/app/service"
 	"goj-server/global"
+	"net/http"
 
 	"github.com/gogf/gf/net/ghttp"
 )
@@ -78,4 +79,39 @@ func (*problems) AddProblem(r *ghttp.Request) {
 }
 
 func (*problems) Judge(r *ghttp.Request) {
+	body := r.GetBody()
+	jr := &model.JudgeReq{}
+	err := json.Unmarshal(body, &jr)
+
+	if err != nil {
+		r.Response.Status = http.StatusBadRequest
+		resp, _ := json.Marshal(model.GenericResp{
+			StatusCode: global.RequestError,
+			Msg:        global.Msg[global.RequestError],
+		})
+		r.Response.WriteJsonExit(resp)
+	}
+
+	result, err := service.Problems.Judge(jr, r)
+	if err != nil {
+		r.Response.Status = http.StatusInternalServerError
+		resp, _ := json.Marshal(model.GenericResp{
+			StatusCode: global.ServerError,
+			Msg:        err.Error(),
+		})
+		r.Response.WriteJsonExit(resp)
+	}
+
+	resp, _ := json.Marshal(result)
+	r.Response.WriteJson(resp)
+}
+
+func (*problems) GetSubmissions(r *ghttp.Request) {
+	uid := r.Session.GetInt("uid")
+	pid := r.GetInt("pid")
+
+	list := service.Problems.GetSubmissions(uid, pid)
+
+	resp, _ := json.Marshal(list)
+	r.Response.WriteJson(resp)
 }

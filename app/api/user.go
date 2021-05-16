@@ -88,6 +88,14 @@ func (*user) LogIn(r *ghttp.Request) {
 	r.Response.WriteJson(resp)
 }
 
+func (*user) GetRole(r *ghttp.Request) {
+	uid := r.Session.GetInt("uid")
+
+	role := service.User.GetRole(uid)
+
+	r.Response.Write(role)
+}
+
 // GetProfile 获得用户信息接口
 func (*user) GetProfile(r *ghttp.Request) {
 	// TODO 获得用户信息

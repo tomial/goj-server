@@ -174,3 +174,10 @@ func (*userService) LogIn(r *model.LogInReq, request *ghttp.Request) (error, glo
 	request.Session.Set("uid", uid)
 	return nil, global.LoginSuccess
 }
+
+func (*userService) GetRole(uid int) string {
+	result := dao.DB.QueryRowx(`select role from user_role where user_id = ?`, uid)
+	var role string
+	result.Scan(&role)
+	return role
+}

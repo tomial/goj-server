@@ -31,6 +31,7 @@ func init() {
 	s.Group("/user", func(group *ghttp.RouterGroup) {
 		group.POST("/login", api.User.LogIn)
 		group.POST("/signup", api.User.SignUp)
+		group.GET("/role", api.User.GetRole)
 		group.GET("/profile", api.User.GetProfile)
 		group.POST("/profile/update", api.User.UpdateProfile)
 	})
@@ -40,5 +41,6 @@ func init() {
 		group.GET("/:id", api.Problems.Get)
 		group.POST("/add", api.Problems.AddProblem)
 		group.POST("/judge", api.Problems.Judge)
+		group.GET("/submission/:pid", api.Problems.GetSubmissions)
 	})
 }

@@ -1,32 +1,34 @@
 # HTTP Server
 [server]
-	Address     = ":8080"
-	ServerRoot  = "public"
-	ServerAgent = "gf-app"
-	LogPath     = "log/server"
+Address = ":8080"
+ServerRoot = "public"
+ServerAgent = "gf-app"
+LogPath = "log/server"
 
 # Logger.
 [logger]
-    Path        = "log"
-    Level       = "all"
-    Stdout      = true
+Path = "log"
+Level = "all"
+Stdout = true
 
 # Template.
 [viewer]
-    Path        = "template"
-    DefaultFile = "index.html"
-    Delimiters  =  ["${", "}"]
+Path = "template"
+DefaultFile = "index.html"
+Delimiters = ["${", "}"]
 
 # Database.
 [database]
-    type = "mysql"
-    [database.localhost]
-        link = "goj:goj@/goj?charset=utf8mb4&collation=utf8mb4_unicode_ci"
-    # Database logger.
-    [database.logger]
-        Path   = "log/sql"
-        Level  = "all"
-        Stdout = true
+type = "mysql"
+[database.localhost]
+link = "goj:goj@/goj?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true"
+# Database logger.
+[database.logger]
+Path = "log/sql"
+Level = "all"
+Stdout = true
 [redis]
 default = "127.0.0.1:6379"
 
+[judger]
+volumeDir = "/home/xzdai/volume/"
